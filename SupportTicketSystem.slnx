@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="SupportTicketSystem.Api/SupportTicketSystem.Api.csproj" Id="d5543e5a-d4c8-403f-b2e3-1ca92d053c95" />
+  <Project Path="SupportTicketSystem.Console/SupportTicketSystem.Console.csproj" Id="e1a3cafe-0a20-417c-9754-7695bfb345ab" />
+  <Project Path="SupportTicketSystem.Core/SupportTicketSystem.Core.csproj" Id="319fa4e6-5112-4d82-bde7-a34ec8ad4a86" />
+  <Project Path="SupportTicketSystem.Infrastructure/SupportTicketSystem.Infrastructure.csproj" Id="5c5edca0-5363-4995-b89a-2d30a9a73918" />
+</Solution>
