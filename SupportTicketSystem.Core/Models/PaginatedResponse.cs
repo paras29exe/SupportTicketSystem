@@ -8,14 +8,13 @@ namespace SupportTicketSystem.Core.Models
 {
     public class PaginatedResponse<T>
     {
-        public IEnumerable<T> data { get; set; } = [];
+        public IEnumerable<T> data { get; set; } = Array.Empty<T>();
         public Pagination pagination { get; set; }
 
         public PaginatedResponse(IEnumerable<T> data, Pagination pagination)
         {
             this.data = data;
             this.pagination = pagination;
-           
         }
     }
 }

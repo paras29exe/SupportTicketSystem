@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
+    <File Path="sql/Final_Assessment.md" />
   </Folder>
   <Project Path="SupportTicketSystem.Api/SupportTicketSystem.Api.csproj" Id="d5543e5a-d4c8-403f-b2e3-1ca92d053c95" />
   <Project Path="SupportTicketSystem.Console/SupportTicketSystem.Console.csproj" Id="e1a3cafe-0a20-417c-9754-7695bfb345ab" />
