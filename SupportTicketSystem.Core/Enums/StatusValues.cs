@@ -8,9 +8,9 @@ namespace SupportTicketSystem.Core.Enums
 {
     public enum StatusValues
     {
-        open = 1,
-        inProgress = 2,
-        resolved = 3,
-        closed = 4
+        open,
+        inProgress,
+        resolved,
+        closed
     }
 }

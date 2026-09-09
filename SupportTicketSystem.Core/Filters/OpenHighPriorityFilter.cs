@@ -9,7 +9,7 @@ using SupportTicketSystem.Core.Interfaces;
 
 namespace SupportTicketSystem.Core.Filters
 {
-    public class OpenHighPriorityFilter : FilterTickets
+    public class OpenHighPriorityFilter : IFilterTickets
     {
         public bool Matches(Ticket ticket)
         {

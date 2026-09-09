@@ -19,7 +19,7 @@ namespace SupportTicketSystem.Infrastructure.Data
 
         private readonly string connectionString = _configuration.GetConnectionString("DefaultConnection")!;
 
-        public async Task<IEnumerable<ResponseTicketDto>> GetAllTicketsAsync()
+        public async Task<IEnumerable<ResponseTicketDto>> getAllTicketsAsync()
         {
             List<ResponseTicketDto> tickets = new List<ResponseTicketDto>();
 
@@ -42,8 +42,15 @@ namespace SupportTicketSystem.Infrastructure.Data
                         t.id = reader.GetInt32(reader.GetOrdinal("ticketId"));
                         t.title = reader.GetString(reader.GetOrdinal("title"));
                         t.description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description"));
-                        t.priority = Enum.Parse<PriorityValues>(reader.GetString(reader.GetOrdinal("priority")));
-                        t.status = Enum.Parse<StatusValues>(reader.GetString(reader.GetOrdinal("status")));
+
+                        t.priority = Enum.TryParse<PriorityValues>(reader.GetString(reader.GetOrdinal("priority")), true, out PriorityValues p)
+                            ? p
+                            : throw new AppException(404, $"Invalid priority value in database: {reader.GetString(reader.GetOrdinal("priority"))}");
+
+                        t.status = Enum.TryParse<StatusValues>(reader.GetString(reader.GetOrdinal("status")), true, out StatusValues s)
+                            ? s
+                            : throw new AppException(404, $"Invalid Status value in database: {reader.GetString(reader.GetOrdinal("status"))}");
+
                         t.customerId = reader.GetInt32(reader.GetOrdinal("customerId"));
                         t.customerName = reader.GetString(reader.GetOrdinal("customerName"));
                         t.agentId = reader.IsDBNull(reader.GetOrdinal("agentId")) ? null : reader.GetInt32(reader.GetOrdinal("agentId"));
@@ -58,7 +65,7 @@ namespace SupportTicketSystem.Infrastructure.Data
 
         }
 
-        public async Task<IEnumerable<ResponseTicketDto>> GetTicketByCustomerIdAsync(int customerId)
+        public async Task<IEnumerable<ResponseTicketDto>> getTicketsByCustomerIdAsync(int customerId)
         {
             List<ResponseTicketDto> tickets = new List<ResponseTicketDto>();
 
@@ -81,8 +88,15 @@ namespace SupportTicketSystem.Infrastructure.Data
                         t.description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description"));
 
                         // priority and status are stored as strings in the DB; parse to enums
-                        t.priority = Enum.Parse<PriorityValues>(reader.GetString(reader.GetOrdinal("priority")));
-                        t.status = Enum.Parse<StatusValues>(reader.GetString(reader.GetOrdinal("status")));
+                        PriorityValues p;
+                        t.priority = Enum.TryParse<PriorityValues>(reader.GetString(reader.GetOrdinal("priority")), true, out p)
+                            ? p 
+                            : throw new AppException(404, $"Invalid priority value in database: {reader.GetString(reader.GetOrdinal("priority"))}");
+
+                        StatusValues s;
+                        t.status = Enum.TryParse<StatusValues>(reader.GetString(reader.GetOrdinal("status")), true, out s) 
+                            ? s
+                            : throw new AppException(404, $"Invalid Status value in database: {reader.GetString(reader.GetOrdinal("status"))}");
 
                         t.customerId = reader.GetInt32(reader.GetOrdinal("customerId"));
                         t.agentId = reader.IsDBNull(reader.GetOrdinal("agentId")) ? null : reader.GetInt32(reader.GetOrdinal("agentId"));
@@ -97,7 +111,7 @@ namespace SupportTicketSystem.Infrastructure.Data
             }
         }
 
-        public async Task<int> UpdateTicketStatusAsync(int ticketId, StatusValues newStatus)
+        public async Task<int> updateTicketStatusAsync(int ticketId, StatusValues newStatus)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
