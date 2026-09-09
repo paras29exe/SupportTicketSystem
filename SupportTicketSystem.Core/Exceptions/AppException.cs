@@ -13,7 +13,7 @@ namespace SupportTicketSystem.Core.Exceptions
         public object? loggingDetails { get; } = null;
         public object? errorInfo { get; } = null;
 
-        public AppException(int status, string message, object? loggingDetails, object errorInfoForFrontend)
+        public AppException(int status, string message, object? loggingDetails, object? errorInfoForFrontend)
         {
             this.status = status;
             this.message = message;

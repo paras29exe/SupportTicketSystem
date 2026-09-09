@@ -184,6 +184,8 @@ while (true)
     var opt = Console.ReadLine();
     Console.WriteLine();
 
+    if (opt == "0") return;
+
     if (opt == "8")
     {
         await LoadAllAsync();
