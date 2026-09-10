@@ -10,7 +10,7 @@ namespace SupportTicketSystem.Infrastructure.Helper
     {
         private readonly AppDbContext context = _context;
 
-        public async Task<bool> doesTicketExistAsync(int id)
+        public async Task<bool> doesTicketExistsAsync(int id)
         {
             return await context.tickets.AnyAsync(t => t.id == id);
         }
@@ -22,17 +22,17 @@ namespace SupportTicketSystem.Infrastructure.Helper
             return ticket.status == StatusValues.closed;
         }
 
-        public async Task<bool> doesAgentExistAsync(int id)
+        public async Task<bool> doesAgentExistsAsync(int id)
         {
             return await context.agents.AnyAsync(a => a.id == id);
         }
 
-        public async Task<bool> doesCustomerExistAsync(int id)
+        public async Task<bool> doesCustomerExistsAsync(int id)
         {
             return await context.customers.AnyAsync(c => c.id == id);
         }
 
-        public async Task<bool> doesCustomerDetailsExistAsync(string? email, string? phone)
+        public async Task<bool> doesCustomerDetailsExistsAsync(string? email, string? phone)
         {
             if (string.IsNullOrEmpty(email) && string.IsNullOrEmpty(phone)) return false;
 
@@ -40,6 +40,11 @@ namespace SupportTicketSystem.Infrastructure.Helper
                 (!string.IsNullOrEmpty(email) && c.email == email) ||
                 (!string.IsNullOrEmpty(phone) && c.phone == phone)
             );
+        }
+
+        public async Task<bool> doesAgentEmailExistsAsync(string email)
+        {
+            return await context.agents.AnyAsync(a => a.email == email);
         }
     }
 }

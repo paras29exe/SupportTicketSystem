@@ -3,11 +3,11 @@ using SupportTicketSystem.Core.Entity;
 using SupportTicketSystem.Core.Models;
 using System.Threading.Tasks;
 
-namespace SupportTicketSystem.Core.Interfaces
+namespace SupportTicketSystem.Core.Interfaces.ICustomer
 {
     public interface IEfCoreCustomersRepo
     {
-        Task<PaginatedResponse<Customer>> getAllCustomersAsync(string? name = null, string? email = null, string? phone = null, int? page = 1, int? pageSize = null);
+        Task<PaginatedResponse<Customer>> getAllCustomersAsync(int page, int pageSize, int maxPageSize, string? name = null, string? email = null, string? phone = null);
         Task<Customer?> getCustomerByIdAsync(int id);
         Task<Customer> createCustomerAsync(Customer customer);
         Task<Customer> updateCustomerAsync(int id, UpdateCustomerDto updateCustomerDto);

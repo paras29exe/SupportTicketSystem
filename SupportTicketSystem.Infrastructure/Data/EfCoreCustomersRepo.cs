@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SupportTicketSystem.Core.Dtos;
 using SupportTicketSystem.Core.Entity;
-using SupportTicketSystem.Core.Interfaces;
+using SupportTicketSystem.Core.Exceptions;
+using SupportTicketSystem.Core.Interfaces.ICustomer;
 using SupportTicketSystem.Core.Models;
 using SupportTicketSystem.Infrastructure.Context;
 using System;
@@ -11,13 +11,11 @@ using System.Threading.Tasks;
 
 namespace SupportTicketSystem.Infrastructure.Data
 {
-    public class EfCoreCustomersRepo(AppDbContext _context, IConfiguration configuration) : IEfCoreCustomersRepo
+    public class EfCoreCustomersRepo(AppDbContext _context) : IEfCoreCustomersRepo
     {
         private readonly AppDbContext context = _context;
-        private readonly int pageSize = int.Parse(configuration["Pagination:DefaultPageSize"]!);
-        private readonly int maxPageSize = int.Parse(configuration["Pagination:MaxPageSize"]!);
 
-        public async Task<PaginatedResponse<Customer>> getAllCustomersAsync(string? name = null, string? email = null, string? phone = null, int? page = 1, int? pageSizeRequested = null)
+        public async Task<PaginatedResponse<Customer>> getAllCustomersAsync(int page, int pageSize, int maxPageSize, string? name = null, string? email = null, string? phone = null)
         {
             IQueryable<Customer> query = context.customers.AsNoTracking();
 
@@ -27,20 +25,15 @@ namespace SupportTicketSystem.Infrastructure.Data
 
             var totalCount = await query.CountAsync();
 
-            int pageValue = page ?? 1;
-            int pageSizeValue = pageSizeRequested ?? this.pageSize;
-
-            pageSizeValue = Math.Min(pageSizeValue, maxPageSize);
-
-            int totalPages = (int)Math.Ceiling(totalCount / (float)pageSizeValue);
+            int totalPages = (int)Math.Ceiling(totalCount / (float)pageSize);
 
             var data = await query
                 .OrderBy(c => c.name)
-                .Skip((pageValue - 1) * pageSizeValue)
-                .Take(pageSizeValue)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            var pagination = new Core.Models.Pagination(pageValue, totalPages, pageSizeValue, maxPageSize);
+            var pagination = new Core.Models.Pagination(page, totalPages, pageSize, maxPageSize);
 
             return new PaginatedResponse<Customer>(data, pagination);
         }

@@ -8,7 +8,7 @@ namespace SupportTicketSystem.Api.ExceptionHandler
 {
     public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> _logger) : IExceptionHandler
     {
-        private readonly ILogger<GlobalExceptionHandler> logger = _logger;
+        private readonly ILogger logger = _logger;
 
         public async ValueTask<bool> TryHandleAsync(
             HttpContext httpContext,
@@ -39,7 +39,7 @@ namespace SupportTicketSystem.Api.ExceptionHandler
                 {
                     status = 500,
                     message = "Database update failed due to some unexpected reason",
-                    details = e.InnerException?.Message
+                    details = e.InnerException?.Message ?? e.Message ?? string.Empty
                 };
             }
             else

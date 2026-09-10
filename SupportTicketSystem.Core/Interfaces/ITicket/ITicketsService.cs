@@ -4,12 +4,12 @@ using SupportTicketSystem.Core.Enums;
 using SupportTicketSystem.Core.Models;
 using System.Threading.Tasks;
 
-namespace SupportTicketSystem.Core.Interfaces
+namespace SupportTicketSystem.Core.Interfaces.ITicket
 {
     public interface ITicketsService
     {
         Task<PaginatedResponse<ResponseTicketDto>> getAllTicketsAsync(string? title = null, StatusValues? status = null, PriorityValues? priority = null, int? page = 1, int? pageSize = null);
-        Task<ResponseTicketDto?> getTicketByIdAsync(int id);
+        Task<ResponseTicketDto> getTicketByIdAsync(int id);
         Task<ResponseTicketDto> createTicketAsync(CreateTicketDto ticket);
         Task<ResponseTicketDto> updateTicketAsync(int id, UpdateTicketDto updateTicketDto);
 

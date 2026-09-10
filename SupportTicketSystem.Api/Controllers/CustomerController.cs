@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SupportTicketSystem.Core.Dtos;
 using SupportTicketSystem.Core.Exceptions;
-using SupportTicketSystem.Core.Interfaces;
 using SupportTicketSystem.Core.Responses;
 using SupportTicketSystem.Core.Models;
 using System.Threading.Tasks;
+using SupportTicketSystem.Core.Interfaces.ICustomer;
 
 namespace SupportTicketSystem.Api.Controllers
 {
@@ -41,7 +41,7 @@ namespace SupportTicketSystem.Api.Controllers
         {
             if (!ModelState.IsValid)
             {
-                throw new AppException(400, "Validation failed", ModelState);
+                throw new AppException(400, "Validation failed", ModelState, "Look the terminal/Console for failed validation fields");
             }
 
             ResponseCustomerDto data = await service.createCustomerAsync(dto);

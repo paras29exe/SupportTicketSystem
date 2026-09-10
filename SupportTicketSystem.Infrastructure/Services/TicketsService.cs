@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using SupportTicketSystem.Core.Dtos;
 using SupportTicketSystem.Core.Entity;
 using SupportTicketSystem.Core.Enums;
@@ -7,19 +8,37 @@ using SupportTicketSystem.Core.Models;
 using SupportTicketSystem.Core.Exceptions;
 using System.Linq;
 using System.Threading.Tasks;
+using SupportTicketSystem.Core.Interfaces.ITicket;
 
 namespace SupportTicketSystem.Infrastructure.Services
 {
-    public class TicketsService(IEfCoreTicketsRepo _repo, IAdoRepo _adoRepo, IHelperRepo _helper, ILogger<TicketsService> _logger) : ITicketsService
+    public class TicketsService(IEfCoreTicketsRepo _repo, IAdoRepo _adoRepo, IHelperRepo _helper, ILogger<TicketsService> _logger, IConfiguration configuration) : ITicketsService
     {
         private readonly IEfCoreTicketsRepo repo = _repo;
         private readonly IAdoRepo adoRepo = _adoRepo;
         private readonly IHelperRepo helper = _helper;
         private readonly ILogger<TicketsService> logger = _logger;
 
+        private readonly int defaultPageSize = int.TryParse(configuration["Pagination:DefaultPageSize"], out int p)
+            ? p
+            : throw new AppException(500, "DefaultPageSize value under Key named 'Pagination' in app.settings must be convertible to int");
+
+        private readonly int maxPageSize = int.TryParse(configuration["Pagination:MaxPageSize"], out int mp)
+            ? mp
+            : throw new AppException(500, "MaxPageSize value under Key named 'Pagination' in app.settings must be convertible to int");
+
         public async Task<PaginatedResponse<ResponseTicketDto>> getAllTicketsAsync(string? title = null, StatusValues? status = null, PriorityValues? priority = null, int? page = 1, int? pageSize = null)
         {
-            var result = await repo.getAllTicketsAsync(title, status, priority, page, pageSize);
+            int pageValue = page ?? 1;
+            if (pageValue < 1) throw new AppException(400, "Page must be greater than or equal to 1");
+
+            int pageSizeValue = pageSize ?? defaultPageSize;
+            if (pageSizeValue < 1) throw new AppException(400, "pageSize must be greater than or equal to 1");
+
+            // clamp pageSize to maxPageSize
+            pageSizeValue = Math.Min(pageSizeValue, maxPageSize);
+
+            var result = await repo.getAllTicketsAsync(pageValue, pageSizeValue, maxPageSize, title, status, priority);
 
             var mapped = result.data.Select(t => new ResponseTicketDto()
             {
@@ -61,7 +80,7 @@ namespace SupportTicketSystem.Infrastructure.Services
         public async Task<ResponseTicketDto> createTicketAsync(CreateTicketDto ticketDto)
         {
             // validate customer
-            if (!await helper.doesCustomerExistAsync(ticketDto.customerId))
+            if (!await helper.doesCustomerExistsAsync(ticketDto.customerId))
             {
                 throw new AppException(400, "Invalid customer id", null, null);
             }
@@ -95,7 +114,7 @@ namespace SupportTicketSystem.Infrastructure.Services
 
         public async Task<ResponseTicketDto> updateTicketAsync(int id, UpdateTicketDto updateTicketDto)
         {
-            if (updateTicketDto.customerId.HasValue && !await helper.doesCustomerExistAsync(updateTicketDto.customerId.Value))
+            if (updateTicketDto.customerId.HasValue && !await helper.doesCustomerExistsAsync(updateTicketDto.customerId.Value))
             {
                 throw new AppException(400, "Invalid customer id", null, null);
             }
@@ -119,7 +138,7 @@ namespace SupportTicketSystem.Infrastructure.Services
 
         public async Task<IEnumerable<ResponseTicketDto>> getTicketsByCustomerIdAsync(int customerId)
         {
-            if (!await helper.doesCustomerExistAsync(customerId))
+            if (!await helper.doesCustomerExistsAsync(customerId))
             {
                 throw new AppException(400, "Invalid customer id");
             }
@@ -129,7 +148,7 @@ namespace SupportTicketSystem.Infrastructure.Services
 
         public async Task<bool> updateTicketStatusAsync(int ticketId, StatusValues newStatus)
         {
-            if (!await helper.doesTicketExistAsync(ticketId))
+            if (!await helper.doesTicketExistsAsync(ticketId))
             {
                 throw new AppException(400, "Invalid ticket id");
             }

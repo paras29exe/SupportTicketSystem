@@ -3,11 +3,11 @@ using Microsoft.Extensions.Logging;
 using SupportTicketSystem.Core.Dtos;
 using SupportTicketSystem.Core.Enums;
 using SupportTicketSystem.Core.Exceptions;
-using SupportTicketSystem.Core.Interfaces;
 using SupportTicketSystem.Core.Responses;
 using SupportTicketSystem.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SupportTicketSystem.Core.Interfaces.ITicket;
 
 namespace SupportTicketSystem.Api.Controllers
 {
