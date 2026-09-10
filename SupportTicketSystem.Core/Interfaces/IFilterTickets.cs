@@ -7,7 +7,7 @@ using SupportTicketSystem.Core.Entity;
 
 namespace SupportTicketSystem.Core.Interfaces
 {
-    public interface FilterTickets
+    public interface IFilterTickets
     {
         bool Matches(Ticket ticket);
     }

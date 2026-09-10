@@ -11,8 +11,8 @@ namespace SupportTicketSystem.Core.Interfaces
 {
     public interface IAdoRepo
     {
-        Task<IEnumerable<ResponseTicketDto>> GetAllTicketsAsync();
-        Task<IEnumerable<ResponseTicketDto>> GetTicketByCustomerIdAsync(int customerId);
-        Task<int> UpdateTicketStatusAsync(int ticketId, StatusValues newStatus);
+        Task<IEnumerable<ResponseTicketDto>> getAllTicketsAsync();
+        Task<IEnumerable<ResponseTicketDto>> getTicketsByCustomerIdAsync(int customerId);
+        Task<int> updateTicketStatusAsync(int ticketId, StatusValues newStatus);
     }
 }

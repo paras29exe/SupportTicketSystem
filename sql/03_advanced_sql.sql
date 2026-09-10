@@ -1,12 +1,15 @@
 /* 1. View showing ticket details with customer and agent names */
-CREATE OR ALTER VIEW ticketDetails
+CREATE OR ALTER VIEW ticketsDetails
 AS
 SELECT
     t.id AS ticketId,
     t.title,
+    t.description,
     t.priority,
     t.status,
+    c.id AS customerId,
     c.name AS customerName,
+    a.id AS agentId,
     a.name AS agentName,
     t.createdAt AS createdDate
 FROM tickets AS t
@@ -52,7 +55,7 @@ BEGIN;
           AND status COLLATE Latin1_General_100_CI_AS = 'Closed'
     )
     BEGIN;
-        THROW 50001, 'Ticket status cannot be changed because the ticket is already Closed.', 1;
+        Return 409;
     END;
 
     IF @newStatus COLLATE Latin1_General_100_CI_AS = 'Closed'
@@ -69,8 +72,10 @@ BEGIN;
 
     IF @@ROWCOUNT = 0
     BEGIN;
-        THROW 50002, 'Ticket does not exist.', 1;
+        Return 404;
     END;
+
+    Return 0;
 END;
 GO
 

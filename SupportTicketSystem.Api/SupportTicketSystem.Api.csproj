@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -16,12 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\SupportTicketSystem.Core\SupportTicketSystem.Core.csproj" />
+    <ProjectReference Include="..\SupportTicketSystem.Infrastructure\SupportTicketSystem.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SupportTicketSystem.Core\SupportTicketSystem.Core.csproj" />
-    <ProjectReference Include="..\SupportTicketSystem.Infrastructure\SupportTicketSystem.Infrastructure.csproj" />
+    <Folder Include="Swagger\" />
   </ItemGroup>
 
 </Project>
