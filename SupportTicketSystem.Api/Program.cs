@@ -8,6 +8,7 @@ using SupportTicketSystem.Infrastructure.Context;
 using SupportTicketSystem.Infrastructure.Data;
 using SupportTicketSystem.Infrastructure.Helper;
 using SupportTicketSystem.Infrastructure.Services;
+using SupportTicketSystem.Infrastructure.ExternalApi;
 using System.Text.Json.Serialization;
 using SupportTicketSystem.Core.Exceptions;
 
@@ -33,6 +34,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(conn);
 });
 
+builder.Services.AddCors(policy =>
+{
+    policy.AddPolicy("Frontend", p =>
+    {
+        p.WithOrigins(
+            builder.Configuration["FrontendOrigins"]
+            ?.Split(",",
+            StringSplitOptions.RemoveEmptyEntries |StringSplitOptions.TrimEntries)!)
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+
+    });
+});
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
@@ -56,7 +70,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
+
+app.UseCors("Frontend");
 
 app.UseExceptionHandler();
 

@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using SupportTicketSystem.Core.Dtos;
 using SupportTicketSystem.Core.Entity;
 using SupportTicketSystem.Core.Interfaces;
@@ -6,24 +6,22 @@ using SupportTicketSystem.Core.Models;
 using SupportTicketSystem.Core.Exceptions;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using SupportTicketSystem.Core.Interfaces.IAgent;
 
 namespace SupportTicketSystem.Infrastructure.Services
 {
-    public class AgentsService(IEfCoreAgentsRepo _repo, IHelperRepo _helper, ILogger<AgentsService> _logger, IConfiguration configuration) : IAgentsService
+    public class AgentsService(IEfCoreAgentsRepo _repo, IHelperRepo _helper, IConfiguration configuration) : IAgentsService
     {
         private readonly IEfCoreAgentsRepo repo = _repo;
         private readonly IHelperRepo helper = _helper;
-        private readonly ILogger<AgentsService> logger = _logger;
 
         private readonly int defaultPageSize = int.TryParse(configuration["Pagination:DefaultPageSize"], out int p)
-            ? p 
-            : throw new AppException(500, "DefaultPageSize value under Key named 'Pagination' in app.settings must be convertible to int");
+            ? p
+            : throw new AppException(500, "Pagination:DefaultPageSize in appsettings.json must be convertible to int");
 
-        private readonly int maxPageSize = int.TryParse(configuration["Pagination:MaxPageSize"] , out int mp) 
+        private readonly int maxPageSize = int.TryParse(configuration["Pagination:MaxPageSize"], out int mp)
             ? mp
-            : throw new AppException(500, "MaxPageSize value under Key named 'Pagination' in app.settings must be convertible to int");
+            : throw new AppException(500, "Pagination:MaxPageSize in appsettings.json must be convertible to int");
 
 
         public async Task<PaginatedResponse<ResponseAgentDto>> getAllAgentsAsync(string? name = null, string? email = null, int? page = 1, int? pageSize = null)

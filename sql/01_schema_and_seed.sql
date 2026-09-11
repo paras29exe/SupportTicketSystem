@@ -28,7 +28,7 @@ CREATE TABLE tickets
     title VARCHAR(250) NOT NULL,
     description VARCHAR(MAX) NULL,
     priority VARCHAR(20) NOT NULL,
-    status VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'open',
     customerId INT NOT NULL,
     agentId INT NULL,
     createdAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),

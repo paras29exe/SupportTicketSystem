@@ -40,7 +40,6 @@ BEGIN;
 END;
 GO
 
-
 /* 3. Stored procedure updating status unless the ticket is already Closed */
 CREATE OR ALTER PROCEDURE updateTicketStatus
     @ticketId INT,
@@ -80,7 +79,7 @@ END;
 GO
 
 -- Executing views and procedures
-SELECT * FROM ticketDetails;
+SELECT * FROM ticketsDetails;
 
 EXEC getTicketsByCustomer @customerId = 1;
 

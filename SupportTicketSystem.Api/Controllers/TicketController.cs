@@ -97,5 +97,15 @@ namespace SupportTicketSystem.Api.Controllers
 
             return Ok(new ApiResponse(200, "Ticket status updated successfully"));
         }
+
+        [HttpPost("assign/{ticketId}/agent/{agentId}")]
+        public async Task<IActionResult> assignAgent([FromRoute] int ticketId, [FromRoute] int agentId)
+        {
+            ResponseTicketDto data = await service.assignAgentToTicketAsync(ticketId, agentId);
+
+            ApiResponse<DataWrapper<ResponseTicketDto>> res = new(200, "Agent assigned successfully", new DataWrapper<ResponseTicketDto>(data));
+
+            return Ok(res);
+        }
     }
 }

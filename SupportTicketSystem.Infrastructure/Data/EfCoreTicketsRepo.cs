@@ -28,7 +28,7 @@ namespace SupportTicketSystem.Infrastructure.Data
             int totalPages = (int)Math.Ceiling(totalCount / (float)pageSize);
 
             var data = await query
-                .OrderBy(t => t.title)
+                .OrderBy(t => t.id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -61,7 +61,7 @@ namespace SupportTicketSystem.Infrastructure.Data
         {
             Ticket t = await context.tickets.FirstAsync(x => x.id == id);
 
-            t.title = updateTicketDto.title;
+            if(String.IsNullOrEmpty(updateTicketDto.title) == false) t.title = updateTicketDto.title;
 
             if (updateTicketDto.description is not null) t.description = updateTicketDto.description;
             if (updateTicketDto.priority.HasValue) t.priority = updateTicketDto.priority.Value;

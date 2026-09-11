@@ -12,9 +12,9 @@ namespace SupportTicketSystem.Core.Interfaces.ITicket
         Task<ResponseTicketDto> getTicketByIdAsync(int id);
         Task<ResponseTicketDto> createTicketAsync(CreateTicketDto ticket);
         Task<ResponseTicketDto> updateTicketAsync(int id, UpdateTicketDto updateTicketDto);
-
         Task<IEnumerable<ResponseTicketDto>> getTicketsByCustomerIdAsync(int customerId);
         Task<bool> updateTicketStatusAsync(int ticketId, StatusValues newStatus);
+        Task<ResponseTicketDto> assignAgentToTicketAsync(int ticketId, int agentId);
 
     }
 }

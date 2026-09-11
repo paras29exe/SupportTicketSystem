@@ -32,5 +32,6 @@ namespace SupportTicketSystem.Core.Dtos
         public string? agentName { get; set; } = null;
 
         public DateTime createdAt { get; set; }
+        public DateTime? closedAt { get; set; }
     }
 }

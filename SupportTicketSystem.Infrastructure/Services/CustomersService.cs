@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using SupportTicketSystem.Core.Dtos;
 using SupportTicketSystem.Core.Entity;
 using SupportTicketSystem.Core.Interfaces;
@@ -11,19 +10,18 @@ using SupportTicketSystem.Core.Interfaces.ICustomer;
 
 namespace SupportTicketSystem.Infrastructure.Services
 {
-    public class CustomersService(IEfCoreCustomersRepo _repo, IHelperRepo _helper, ILogger<CustomersService> _logger, IConfiguration configuration) : ICustomersService
+    public class CustomersService(IEfCoreCustomersRepo _repo, IHelperRepo _helper, IConfiguration configuration) : ICustomersService
     {
         private readonly IEfCoreCustomersRepo repo = _repo;
         private readonly IHelperRepo helper = _helper;
-        private readonly ILogger<CustomersService> logger = _logger;
 
         private readonly int defaultPageSize = int.TryParse(configuration["Pagination:DefaultPageSize"], out int p)
-            ? p
-            : throw new AppException(500, "DefaultPageSize value under Key named 'Pagination' in app.settings must be convertible to int");
+             ? p
+             : throw new AppException(500, "Pagination:DefaultPageSize in appsettings.json must be convertible to int");
 
         private readonly int maxPageSize = int.TryParse(configuration["Pagination:MaxPageSize"], out int mp)
             ? mp
-            : throw new AppException(500, "MaxPageSize value under Key named 'Pagination' in app.settings must be convertible to int");
+            : throw new AppException(500, "Pagination:MaxPageSize in appsettings.json must be convertible to int");
 
 
         public async Task<PaginatedResponse<ResponseCustomerDto>> getAllCustomersAsync(string? name = null, string? email = null, string? phone = null, int? page = 1, int? pageSize = null)
