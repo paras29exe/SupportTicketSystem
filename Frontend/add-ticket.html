@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Ticket</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <p><a href="tickets.html">Back to tickets</a></p>
+        <h1>Add Ticket</h1>
+        <p id="message" class="message"></p>
+        <form id="ticketForm">
+            <label for="title">Title</label>
+            <input id="title" name="title" required>
+            <label for="description">Description</label>
+            <textarea id="description" name="description"></textarea>
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+            <label for="customerId">Customer ID</label>
+            <input id="customerId" name="customerId" type="number" min="1" required>
+            <p><button type="submit">Create ticket</button></p>
+        </form>
+    </main>
+    <script src="api.js"></script>
+    <script src="add-ticket.js"></script>
+</body>
+</html>

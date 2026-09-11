@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agents</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <p><a href="index.html">Home</a> | <a href="tickets.html">Tickets</a> | <a href="customers.html">Customers</a></p>
+        <h1>Agents</h1>
+        <div class="actions">
+            <a href="add-agent.html">Add agent</a>
+            <button id="loadAgentsButton" type="button">Refresh</button>
+        </div>
+        <p id="loadingMessage" class="message">Loading agents...</p>
+        <p id="errorMessage" class="message error"></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            <tbody id="agentsTableBody"></tbody>
+        </table>
+        <div id="agentPagination" class="pagination"></div>
+    </main>
+    <script src="api.js"></script>
+    <script src="helper.js"></script>
+    <script src="agents.js"></script>
+</body>
+</html>
