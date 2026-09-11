@@ -33,7 +33,7 @@ namespace SupportTicketSystem.Infrastructure.Data
                 .Take(pageSize)
                 .ToListAsync();
 
-            var pagination = new Pagination(page, totalPages, pageSize, maxPageSize);
+            var pagination = new Pagination(page, totalPages, totalCount, pageSize, maxPageSize);
 
             return new PaginatedResponse<Ticket>(data, pagination);
         }

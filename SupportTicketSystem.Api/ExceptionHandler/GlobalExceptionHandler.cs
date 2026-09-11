@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SupportTicketSystem.Core.Exceptions;
 using SupportTicketSystem.Core.Models;
+using System.Data.Common;
 
 namespace SupportTicketSystem.Api.ExceptionHandler
 {
@@ -20,7 +21,7 @@ namespace SupportTicketSystem.Api.ExceptionHandler
 
             if(exception is AppException appException)
             {
-                logger.LogWarning($"Custom Exception thrown at {httpContext.Request.Method} - {httpContext.Request.Path} \nDetails: {appException.loggingDetails}");
+                logger.LogWarning($"Custom Exception thrown at {httpContext.Request.Method} - {httpContext.Request.Path} \n\n\tDetails: {appException.loggingDetails}");
 
                 httpContext.Response.StatusCode = appException.status;
 
@@ -31,7 +32,7 @@ namespace SupportTicketSystem.Api.ExceptionHandler
                     details = appException.errorInfo
                 };
             }else if(exception is DbUpdateException e){
-                logger.LogError($"Database updation failed at {httpContext.Request.Method}  - {httpContext.Request.Path}\n Message: {e.InnerException?.Message ?? e.Message} \nError Info : {e.InnerException}");
+                logger.LogError($"Database updation failed at {httpContext.Request.Method}  - {httpContext.Request.Path}\n\n\t Message: {e.InnerException?.Message ?? e.Message} \n\n\tError Info : {e.InnerException}");
 
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
@@ -44,7 +45,7 @@ namespace SupportTicketSystem.Api.ExceptionHandler
             }
             else
             {
-                logger.LogError($"Unhandled exception occurred at {httpContext.Request.Method}  - {httpContext.Request.Path}\n \nDetails: {exception}");
+                logger.LogError($"Unhandled exception occurred at {httpContext.Request.Method}  - {httpContext.Request.Path}\n \n\tDetails: {exception}");
 
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 

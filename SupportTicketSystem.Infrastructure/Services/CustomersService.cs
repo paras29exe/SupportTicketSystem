@@ -48,14 +48,9 @@ namespace SupportTicketSystem.Infrastructure.Services
             return new PaginatedResponse<ResponseCustomerDto>(mapped, result.pagination);
         }
 
-        public async Task<ResponseCustomerDto?> getCustomerByIdAsync(int id)
+        public async Task<ResponseCustomerDto> getCustomerByIdAsync(int id)
         {
-            Customer? c = await repo.getCustomerByIdAsync(id);
-
-            if (c == null)
-            {
-                throw new AppException(404, $"Customer with Id: {id} does not exist");
-            }
+            Customer c = await repo.getCustomerByIdAsync(id) ?? throw new AppException(404, $"Customer with Id: {id} does not exist");
 
             return new ResponseCustomerDto()
             {

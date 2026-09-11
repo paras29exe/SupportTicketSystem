@@ -10,13 +10,15 @@ namespace SupportTicketSystem.Core.Models
     {
         public int page {  get; set; }
         public int totalPages { get; set; }
+        public int totalCount { get; set; }
         public int pageSize { get; set; }
         public int maxPageSize { get; set; }
 
-        public Pagination(int  page, int totalPages, int pageSize, int maxPageSize)
+        public Pagination(int  page, int totalPages, int totalCount, int pageSize, int maxPageSize)
         {
             this.page = page;
             this.totalPages = totalPages; 
+            this.totalCount = totalCount;
             this.pageSize = pageSize;
             this.maxPageSize = maxPageSize;
         }

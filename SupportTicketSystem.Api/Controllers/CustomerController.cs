@@ -69,9 +69,9 @@ namespace SupportTicketSystem.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> deleteCustomer(int id)
         {
-            bool deleted = await service.deleteCustomerWithNoOpenTicketsAsync(id);
+            await service.deleteCustomerWithNoOpenTicketsAsync(id);
 
-            return Ok(new ApiResponse(200, "Customer deleted successfully"));
+            return Ok(new ApiResponse(200, "Customer deleted successfully along with tickets & ticketNotes associated with those tickets raised by customer"));
         }
     }
 }
