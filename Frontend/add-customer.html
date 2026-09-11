@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Customer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <p><a href="customers.html">Back to customers</a></p>
+        <h1>Add Customer</h1>
+        <p id="message" class="message"></p>
+        <form id="customerForm">
+            <label for="name">Name</label>
+            <input id="name" name="name" required>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" required>
+            <p><button type="submit">Create customer</button></p>
+        </form>
+    </main>
+    <script src="api.js"></script>
+    <script src="add-customer.js"></script>
+</body>
+</html>

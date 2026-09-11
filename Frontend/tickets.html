@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <p><a href="index.html">Home</a> | <a href="customers.html">Customers</a> | <a href="agents.html">Agents</a></p>
+        <h1>Tickets</h1>
+        <div class="actions">
+            <a href="add-ticket.html">Add ticket</a>
+            <button id="loadTicketsButton" type="button">Refresh</button>
+        </div>
+        <p id="loadingMessage" class="message">Loading tickets...</p>
+        <p id="successMessage" class="message success"></p>
+        <p id="errorMessage" class="message error"></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created at</th>
+                    <th>Closed at</th>
+                    <th>Customer</th>
+                    <th>Agent</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="ticketsTableBody"></tbody>
+        </table>
+        <div id="ticketPagination" class="pagination"></div>
+    </main>
+    <script src="api.js"></script>
+    <script src="helper.js"></script>
+    <script src="tickets.js"></script>
+</body>
+</html>

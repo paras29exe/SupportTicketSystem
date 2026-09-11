@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Ticket</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <p><a href="tickets.html">Back to tickets</a></p>
+        <h1>Assign Ticket</h1>
+        <p id="message" class="message"></p>
+        <form id="assignTicketForm">
+            <label for="ticketId">Ticket ID</label>
+            <input id="ticketId" name="ticketId" type="number" min="1" required>
+            <label for="agentId">Agent ID</label>
+            <input id="agentId" name="agentId" type="number" min="1" required>
+            <p><button type="submit">Assign agent</button></p>
+        </form>
+    </main>
+    <script src="api.js"></script>
+    <script src="assign-ticket.js"></script>
+</body>
+</html>
