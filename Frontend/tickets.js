@@ -45,7 +45,7 @@ function renderTickets() {
             <td>${formatDate(ticket.createdAt)}</td>
             <td>${ticket.closedAt ? formatDate(ticket.closedAt) : "-"}</td>
             <td>${escapeHtml(ticket.customerName || ticket.customerId)}</td>
-            <td>${escapeHtml(ticket.agentName || ticket.agentId || "Unassigned")}</td>
+            <td>${escapeHtml(ticket.agentName || ticket.agentId || "-")}</td>
             <td>
                 <a class="assign-agent-btn" href="assign-ticket.html?ticketId=${ticket.id}">Assign agent</a>
             </td>

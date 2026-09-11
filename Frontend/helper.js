@@ -25,6 +25,10 @@ function renderPagination(parentComponentName, pagination, loadPage) {
 
     parent.innerHTML = "";
 
+    const totalCount = document.createElement("p");
+    totalCount.textContent = `Total records: ${pagination.totalCount}`;
+    parent.appendChild(totalCount);
+
     for (let page = 1; page <= pagination.totalPages; page += 1) {
         const button = document.createElement("button");
         button.type = "button";
