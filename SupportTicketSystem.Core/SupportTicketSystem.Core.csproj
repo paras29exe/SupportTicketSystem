@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="JsonFileStorage\" />
-    <Folder Include="Pagination\" />
-  </ItemGroup>
-
 </Project>
