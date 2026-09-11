@@ -6,6 +6,7 @@ using SupportTicketSystem.Core.Interfaces.ICustomer;
 using SupportTicketSystem.Core.Models;
 using SupportTicketSystem.Infrastructure.Context;
 using System;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace SupportTicketSystem.Infrastructure.Data
                 .Take(pageSize)
                 .ToListAsync();
 
-            var pagination = new Core.Models.Pagination(page, totalPages, pageSize, maxPageSize);
+            var pagination = new Core.Models.Pagination(page, totalPages, totalCount, pageSize, maxPageSize);
 
             return new PaginatedResponse<Customer>(data, pagination);
         }
@@ -67,15 +68,44 @@ namespace SupportTicketSystem.Infrastructure.Data
         public async Task<bool> deleteCustomerWithNoOpenTicketsAsync(int id)
         {
             Customer c = await context.customers
-                                            .Include(data => data.tickets)
-                                            .FirstAsync(cu => cu.id == id)!;
-
+                                            .Include(data => data.tickets)!
+                                                .ThenInclude(t => t.notes)
+                                            .FirstAsync(cu => cu.id == id)!; 
+            
             bool hasOpen = c.tickets != null && c.tickets.Any(t => t.status == Core.Enums.StatusValues.open || t.status == Core.Enums.StatusValues.inProgress);
 
             if (hasOpen) return false;
 
-            context.customers.Remove(c);
-            await context.SaveChangesAsync();
+            using var transaction = await context.Database.BeginTransactionAsync();
+
+            try
+            {
+                //hierachy: ticketNote -> Ticket -> Customer
+
+                // This was the Error/blocker encountered at very end of wrapping up project. when trying to delete a customer it is conflicting with the foreign key constraint of ticketNotes to tickets. So we need to delete the ticketNotes first, then tickets, then customer.
+
+                //becuase to delete a customer, we need to delete all the tickets and to delete a ticket, we need to delete all the ticket notes first
+                List<Ticket> tickets = c.tickets is not null ? c.tickets.ToList() : new();
+
+                if (tickets.Count > 0)
+                {
+                    var allTN = tickets.SelectMany<Ticket, TicketNote>(t => t.notes ?? Enumerable.Empty<TicketNote>()).ToList();
+
+                    context.ticketNotes.RemoveRange(allTN);
+                    context.tickets.RemoveRange(tickets);
+                }
+
+                context.customers.Remove(c);
+                await context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateException)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+
             return true;
         }
     }
