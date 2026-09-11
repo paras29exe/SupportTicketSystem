@@ -18,12 +18,7 @@ namespace SupportTicketSystem.Core.Dtos
         [Required(ErrorMessage = "Ticket priority is required.")]
         public PriorityValues priority { get; set; } = PriorityValues.low;
 
-        [Required(ErrorMessage = "Ticket status is required.")]
-        public StatusValues status { get; set; } = StatusValues.open;
-
         [Required(ErrorMessage = "Customer ID is required.")]
         public int customerId { get; set; }
-
-        public int? agentId { get; set; }
     }
 }

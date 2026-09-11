@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using SupportTicketSystem.Core.Dtos;
 using SupportTicketSystem.Core.Entity;
@@ -12,20 +11,19 @@ using SupportTicketSystem.Core.Interfaces.ITicket;
 
 namespace SupportTicketSystem.Infrastructure.Services
 {
-    public class TicketsService(IEfCoreTicketsRepo _repo, IAdoRepo _adoRepo, IHelperRepo _helper, ILogger<TicketsService> _logger, IConfiguration configuration) : ITicketsService
+    public class TicketsService(IEfCoreTicketsRepo _repo, IAdoRepo _adoRepo, IHelperRepo _helper, IConfiguration configuration) : ITicketsService
     {
         private readonly IEfCoreTicketsRepo repo = _repo;
         private readonly IAdoRepo adoRepo = _adoRepo;
         private readonly IHelperRepo helper = _helper;
-        private readonly ILogger<TicketsService> logger = _logger;
 
         private readonly int defaultPageSize = int.TryParse(configuration["Pagination:DefaultPageSize"], out int p)
             ? p
-            : throw new AppException(500, "DefaultPageSize value under Key named 'Pagination' in app.settings must be convertible to int");
+            : throw new AppException(500, "Pagination:DefaultPageSize in appsettings.json must be convertible to int");
 
         private readonly int maxPageSize = int.TryParse(configuration["Pagination:MaxPageSize"], out int mp)
             ? mp
-            : throw new AppException(500, "MaxPageSize value under Key named 'Pagination' in app.settings must be convertible to int");
+            : throw new AppException(500, "Pagination:MaxPageSize in appsettings.json must be convertible to int");
 
         public async Task<PaginatedResponse<ResponseTicketDto>> getAllTicketsAsync(string? title = null, StatusValues? status = null, PriorityValues? priority = null, int? page = 1, int? pageSize = null)
         {
@@ -51,16 +49,50 @@ namespace SupportTicketSystem.Infrastructure.Services
                 customerName = t.customer?.name,
                 agentId = t.agentId,
                 agentName = t.agent?.name,
-                createdAt = t.createdAt
+                createdAt = t.createdAt,
+                closedAt = t.closedAt
             });
 
             return new PaginatedResponse<ResponseTicketDto>(mapped, result.pagination);
         }
 
-        public async Task<ResponseTicketDto?> getTicketByIdAsync(int id)
+        public async Task<ResponseTicketDto> assignAgentToTicketAsync(int ticketId, int agentId)
         {
-            var t = await repo.getTicketByIdAsync(id);
-            if (t == null) return null;
+            // validate ticket exists
+            if (!await helper.doesTicketExistsAsync(ticketId))
+            {
+                throw new AppException(400, "Invalid ticket id");
+            }
+
+            // validate agent exists
+            if (!await helper.doesAgentExistsAsync(agentId))
+            {
+                throw new AppException(400, "Invalid agent id");
+            }
+
+            UpdateTicketDto update = new UpdateTicketDto { title="", agentId = agentId };
+
+            var updated = await repo.updateTicketAsync(ticketId, update);
+
+            return new ResponseTicketDto()
+            {
+                id = updated.id,
+                title = updated.title,
+                description = updated.description,
+                priority = updated.priority,
+                status = updated.status,
+                customerId = updated.customerId,
+                customerName = updated.customer?.name,
+                agentId = updated.agentId,
+                agentName = updated.agent?.name,
+                createdAt = updated.createdAt,
+                closedAt = updated.closedAt
+            };
+        }
+
+        public async Task<ResponseTicketDto> getTicketByIdAsync(int id)
+        {
+            var t = await repo.getTicketByIdAsync(id) ?? throw new AppException(404, "Invalid Ticket id");
 
             return new ResponseTicketDto()
             {
@@ -73,7 +105,8 @@ namespace SupportTicketSystem.Infrastructure.Services
                 customerName = t.customer?.name,
                 agentId = t.agentId,
                 agentName = t.agent?.name,
-                createdAt = t.createdAt
+                createdAt = t.createdAt,
+                closedAt = t.closedAt
             };
         }
 
@@ -90,9 +123,10 @@ namespace SupportTicketSystem.Infrastructure.Services
                 title = ticketDto.title,
                 description = ticketDto.description,
                 priority = ticketDto.priority,
-                status = ticketDto.status,
+                // status is not accepted from caller; default to open
+                status = StatusValues.open,
                 customerId = ticketDto.customerId,
-                agentId = ticketDto.agentId
+                agentId = null
             };
 
             var created = await repo.createTicketAsync(t);
@@ -108,7 +142,8 @@ namespace SupportTicketSystem.Infrastructure.Services
                 customerName = created.customer?.name,
                 agentId = created.agentId,
                 agentName = created.agent?.name,
-                createdAt = created.createdAt
+                createdAt = created.createdAt,
+                closedAt = created.closedAt
             };
         }
 
@@ -132,7 +167,8 @@ namespace SupportTicketSystem.Infrastructure.Services
                 customerName = updated.customer?.name,
                 agentId = updated.agentId,
                 agentName = updated.agent?.name,
-                createdAt = updated.createdAt
+                createdAt = updated.createdAt,
+                closedAt = updated.closedAt
             };
         }
 

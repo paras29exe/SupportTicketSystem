@@ -28,7 +28,7 @@ namespace SupportTicketSystem.Infrastructure.Data
             int totalPages = (int)Math.Ceiling(totalCount / (float)pageSize);
 
             var data = await query
-                .OrderBy(c => c.name)
+                .OrderBy(c => c.id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

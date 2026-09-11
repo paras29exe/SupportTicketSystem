@@ -102,6 +102,7 @@ namespace SupportTicketSystem.Infrastructure.Data
                         t.agentId = reader.IsDBNull(reader.GetOrdinal("agentId")) ? null : reader.GetInt32(reader.GetOrdinal("agentId"));
 
                         t.createdAt = reader.GetDateTime(reader.GetOrdinal("createdAt"));
+                        t.closedAt = reader.IsDBNull(reader.GetOrdinal("closedAt")) ? null : reader.GetDateTime(reader.GetOrdinal("closedAt"));
 
                         tickets.Add(t);
                     }
