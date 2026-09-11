@@ -41,7 +41,7 @@ builder.Services.AddCors(policy =>
         p.WithOrigins(
             builder.Configuration["FrontendOrigins"]
             ?.Split(",",
-            StringSplitOptions.RemoveEmptyEntries |StringSplitOptions.TrimEntries)!)
+            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)! ?? [])
         .AllowAnyMethod()
         .AllowAnyHeader();
 
@@ -60,6 +60,9 @@ builder.Services.AddScoped<IEfCoreAgentsRepo, EfCoreAgentsRepo>();
 builder.Services.AddScoped<ITicketsService, TicketsService>();
 builder.Services.AddScoped<ICustomersService, CustomersService>();
 builder.Services.AddScoped<IAgentsService, AgentsService>();
+
+// Registering external APIs
+builder.Services.AddScoped<StarWarsApi>();
 
 var app = builder.Build();
 
