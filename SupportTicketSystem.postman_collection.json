@@ -1,0 +1,278 @@
+{
+  "info": {
+    "_postman_id": "8f7a6f0d-1c69-4bf0-a3f4-2f9b3e2d4c11",
+    "name": "Support Ticket System API",
+    "description": "API test collection for the Support Ticket System assessment. Start the API before running these requests. Expected success codes are documented in each request description.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7040/api"
+    },
+    {
+      "key": "ticketId",
+      "value": "1"
+    },
+    {
+      "key": "customerId",
+      "value": "1"
+    },
+    {
+      "key": "agentId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Tickets",
+      "item": [
+        {
+          "name": "List tickets with filters and pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Expected: 200 OK with the paginated ticket response. Optional filters are title, status, priority, page, and pageSize.",
+            "url": {
+              "raw": "{{baseUrl}}/tickets?title=login&status=open&priority=high&page=1&pageSize=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets"],
+              "query": [
+                {"key": "title", "value": "login"},
+                {"key": "status", "value": "open"},
+                {"key": "priority", "value": "high"},
+                {"key": "page", "value": "1"},
+                {"key": "pageSize", "value": "5"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get ticket by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Expected: 200 OK when the ticket exists; 404 Not Found when it does not.",
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{ticketId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{ticketId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create ticket",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "description": "Expected: 201 Created. Invalid or missing required values return 400 Bad Request.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Cannot log in\",\n  \"description\": \"The customer cannot sign in to the portal.\",\n  \"priority\": \"high\",\n  \"customerId\": {{customerId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tickets",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets"]
+            }
+          }
+        },
+        {
+          "name": "Update ticket",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "description": "Expected: 200 OK. Invalid values return 400 Bad Request; an unknown ticket normally returns 404 Not Found.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Cannot log in - updated\",\n  \"description\": \"The customer still cannot sign in.\",\n  \"priority\": \"medium\",\n  \"status\": \"inProgress\",\n  \"customerId\": {{customerId}},\n  \"agentId\": {{agentId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{ticketId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{ticketId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get tickets by customer (ADO.NET path)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Expected: 200 OK with tickets for the customer. The API uses the stored procedure/ADO.NET path for this request.",
+            "url": {
+              "raw": "{{baseUrl}}/tickets/by-customer/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "by-customer", "{{customerId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update ticket status (ADO.NET path)",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "description": "Expected: 200 OK. Invalid status or a status change rejected by the stored procedure returns 400 or another documented API error response.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tickets/{{ticketId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "{{ticketId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Assign agent to ticket",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Expected: 200 OK when both the ticket and agent exist and the agent can be assigned; otherwise 400 or 404 depending on the API error.",
+            "url": {
+              "raw": "{{baseUrl}}/tickets/assign/{{ticketId}}/agent/{{agentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tickets", "assign", "{{ticketId}}", "agent", "{{agentId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "List customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Expected: 200 OK with the paginated customer response. Optional filters are name, email, phone, page, and pageSize.",
+            "url": {
+              "raw": "{{baseUrl}}/customers?name=Abhishek&page=1&pageSize=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
+              "query": [
+                {"key": "name", "value": "Abhishek"},
+                {"key": "page", "value": "1"},
+                {"key": "pageSize", "value": "5"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get customer by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Expected: 200 OK when the customer exists; 404 Not Found when it does not.",
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create customer",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "description": "Expected: 201 Created. Missing required fields or a duplicate email return 400 or another API error response.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Customer\",\n  \"email\": \"new.customer@example.com\",\n  \"phone\": \"+1-555-0100\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"]
+            }
+          }
+        },
+        {
+          "name": "Update customer",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "description": "Expected: 200 OK. An unknown customer returns 404 Not Found or the API error response.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Customer\",\n  \"email\": \"updated.customer@example.com\",\n  \"phone\": \"+1-555-0101\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete customer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Expected: 200 OK when the customer has no open tickets. A customer with open tickets should be rejected with the API error response, normally 400; an unknown customer returns 404.",
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agents",
+      "item": [
+        {
+          "name": "List agents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Expected: 200 OK with the paginated agent response.",
+            "url": {
+              "raw": "{{baseUrl}}/agents?page=1&pageSize=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["agents"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "pageSize", "value": "5"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get agent by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Expected: 200 OK when the agent exists; 404 Not Found when it does not.",
+            "url": {
+              "raw": "{{baseUrl}}/agents/{{agentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["agents", "{{agentId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create agent",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "description": "Expected: 201 Created. Invalid or missing required values return 400 Bad Request.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Agent\",\n  \"email\": \"new.agent@example.com\",\n  \"department\": \"Technical Support\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/agents",
+              "host": ["{{baseUrl}}"],
+              "path": ["agents"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
