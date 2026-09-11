@@ -72,9 +72,8 @@ namespace SupportTicketSystem.Tests.Services
         {
             repoMock.Setup(r => r.getTicketByIdAsync(It.IsAny<int>())).ReturnsAsync((Ticket?)null);
 
-            ResponseTicketDto? res = await service.getTicketByIdAsync(123);
+            var res = await Assert.ThrowsAsync<AppException>(() => service.getTicketByIdAsync(123));
 
-            Assert.Null(res);
         }
 
         [Fact]

@@ -78,7 +78,7 @@ namespace SupportTicketSystem.Tests.Services
         {
             helperMock.Setup(h => h.doesCustomerExistsAsync(It.IsAny<int>())).ReturnsAsync(false);
 
-            AppException ex = await Assert.ThrowsAsync<AppException>(() => service.deleteCustomerWithNoOpenTicketsAsync(3));
+            AppException ex = await Assert.ThrowsAsync<AppException>(() => service.deleteCustomerWithNoOpenTicketsAsync(It.IsAny<int>()));
             Assert.Equal(404, ex.status);
         }
 
