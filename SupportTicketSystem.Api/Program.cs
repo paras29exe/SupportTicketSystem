@@ -64,6 +64,8 @@ builder.Services.AddScoped<IAgentsService, AgentsService>();
 // Registering external APIs
 builder.Services.AddScoped<StarWarsApi>();
 
+builder.Services.AddSingleton<SettingsService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
